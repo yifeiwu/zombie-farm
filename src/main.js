@@ -36,5 +36,15 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+// Suspend audio when the tab is hidden, resume when visible
+import { zzfxX } from './utils/zzfx.js';
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    zzfxX.suspend();
+  } else {
+    zzfxX.resume();
+  }
+});
+
 export default game;
 

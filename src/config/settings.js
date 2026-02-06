@@ -1,14 +1,14 @@
 // Display
-export const GAME_WIDTH = 1024;
-export const GAME_HEIGHT = 600;
+export const GAME_WIDTH = 2048;
+export const GAME_HEIGHT = 1200;
 
 // Grid layout (5 rows x 9 columns, like PvZ)
 export const GRID_ROWS = 5;
 export const GRID_COLS = 9;
-export const CELL_WIDTH = 80;
-export const CELL_HEIGHT = 80;
-export const GRID_OFFSET_X = 220; // left margin to the grid
-export const GRID_OFFSET_Y = 80;  // top margin to the grid
+export const CELL_WIDTH = 160;
+export const CELL_HEIGHT = 160;
+export const GRID_OFFSET_X = 440; // left margin to the grid
+export const GRID_OFFSET_Y = 160;  // top margin to the grid
 
 // Gameplay
 export const STARTING_BRAINS = 300;     // currency (like sun, but brains)

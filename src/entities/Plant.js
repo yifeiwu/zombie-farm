@@ -32,8 +32,8 @@ export class Plant extends LivingEntity {
 
     // Physics
     this.body.setImmovable(true);
-    this.body.setSize(32, 48);
-    this.body.setOffset(8, 12);
+    this.body.setSize(64, 96);
+    this.body.setOffset(16, 24);
 
     // Gentle sway animation
     scene.tweens.add({

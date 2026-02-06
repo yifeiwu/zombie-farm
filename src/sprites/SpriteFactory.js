@@ -10,9 +10,9 @@ export class SpriteFactory {
 
   generateZombieTexture(key, color) {
     const g = this.scene.make.graphics({ add: false });
-    const w = 48;
-    const h = 64;
-    const pixelSize = 1;
+    const w = 96;
+    const h = 180;
+    const pixelSize = 2;
     const offsetX = 0;
     const offsetY = 0;
 
@@ -30,7 +30,7 @@ export class SpriteFactory {
       w: 0xffffff,   // highlights
     };
 
-    const zombiePattern = this.expandPattern(this.getZombiePattern(key), 3, 48, 64);
+    const zombiePattern = this.expandPattern(this.getZombiePattern(key), 3, 96, 180);
     this.drawPixelArt(g, zombiePattern, pixelSize, offsetX, offsetY, palette);
     g.generateTexture(key, w, h);
     g.destroy();
@@ -38,9 +38,9 @@ export class SpriteFactory {
 
   generatePlantTexture(key, color) {
     const g = this.scene.make.graphics({ add: false });
-    const w = 48;
-    const h = 64;
-    const pixelSize = 1;
+    const w = 96;
+    const h = 180;
+    const pixelSize = 2;
     const offsetX = 0;
     const offsetY = 0;
 
@@ -58,7 +58,7 @@ export class SpriteFactory {
       w: 0xffffff,   // highlights
     };
 
-    const plantPattern = this.expandPattern(this.getPlantPattern(key), 3, 48, 64);
+    const plantPattern = this.expandPattern(this.getPlantPattern(key), 3, 96, 180);
     this.drawPixelArt(g, plantPattern, pixelSize, offsetX, offsetY, palette);
     g.generateTexture(key, w, h);
     g.destroy();
@@ -79,15 +79,15 @@ export class SpriteFactory {
 
     // Outer glow
     g.fillStyle(glow, 0.8);
-    g.fillRoundedRect(0, (height / 2) - 2, width, 4, 2);
+    g.fillRoundedRect(0, (height / 2) - 4, width, 8, 4);
 
     // Core beam
     g.fillStyle(core, 1);
-    g.fillRoundedRect(0, (height / 2) - 1, width, 2, 1);
+    g.fillRoundedRect(0, (height / 2) - 2, width, 4, 2);
 
     // Spark at the tip
     g.fillStyle(0xffffff, 1);
-    g.fillRect(width - 2, (height / 2) - 1, 2, 2);
+    g.fillRect(width - 4, (height / 2) - 2, 4, 4);
 
     g.generateTexture(key, width, height);
     g.destroy();
@@ -97,38 +97,40 @@ export class SpriteFactory {
     const g = this.scene.make.graphics({ add: false });
     g.fillStyle(0xff9ff3, 1);
     // Two lobes
-    g.fillCircle(10, 10, 8);
-    g.fillCircle(20, 10, 8);
+    g.fillCircle(20, 20, 16);
+    g.fillCircle(40, 20, 16);
     // Base
-    g.fillRoundedRect(4, 8, 22, 12, 4);
-    g.generateTexture('brain', 30, 24);
+    g.fillRoundedRect(8, 16, 44, 24, 8);
+    g.generateTexture('brain', 60, 48);
     g.destroy();
   }
 
   getZombiePattern(key) {
     if (key === 'fast') {
+      // Small, lean, compact runner zombie
       return [
-        "......hhhh......",
-        ".....hhhhhh.....",
-        "....hhe..ehh....",
-        ".....hxxxxh.....",
-        "......bbbb......",
-        ".....bb..bb.....",
-        "...bbbbbbbbbb...",
-        "...bbbbb..bbb...",
-        "...bbbb....bb...",
-        "...bbb......b...",
-        "..bbb.bbb..bb...",
-        ".bb..bbbb..bb...",
-        ".dd....d....dd..",
-        ".ddd..ddd..ddd..",
-        "..dd..ss..ssdd..",
-        "...s..ss..ss....",
-        "...s..ss..ss....",
-        "..ss........ss..",
-        ".ss..........ss.",
-        "................",
-        "................",
+        "................",  // pad top
+        ".......hhh........",  // 15 -> 18
+        "......hhhhh.......",  // 15 -> 18
+        ".....hheeehh......",  // 15 -> 18
+        "......hxxxxh......",  // 16 -> 18
+        ".......bbb........",  // 15 -> 18
+        "......bb.bb.......",  // 15 -> 18
+        "....bbbbbbbb......",  // 15 -> 18
+        "....bbbbbbbb......",  // 15 -> 18
+        "....bbb..bbb......",  // 15 -> 18
+        "....bb....bb......",  // 15 -> 18
+        "...bb.bbbb.bb.....",  // 15 -> 18
+        "..bb..bbbb..bb....",  // 15 -> 18
+        "..bb..bbbb..bb....",  // 15 -> 18
+        "..dd...d...dd.....",  // 15 -> 18
+        "..ddd.ddd.ddd.....",  // 15 -> 18
+        "...dd.sss.ssdd....",  // 15 -> 18
+        "....s.sss.ss......",  // 15 -> 18
+        "....s.sss.ss......",  // 15 -> 18
+        "...ss.sss.ss......",  // 15 -> 18
+        "..ss..sss..ss.....",  // 15 -> 18
+        ".ss...sss...ss....",  // 15 -> 18
         "................",
         "................",
         "................",
@@ -136,99 +138,121 @@ export class SpriteFactory {
     }
 
     if (key === 'tank') {
+      // Massive, heavily armored zombie with huge body
       return [
-        "..xxxxxxxxxxxx..",
-        ".xxhhhhhhhhhhxx.",
-        ".xxhhe..ehhhxxx.",
-        ".xxhhhhhhhhhhxx.",
-        ".xxbbbbbbbbbbxx.",
-        ".xxbbxxxxxxbbxx.",
-        ".xxbbbbbbbbbbxx.",
-        ".xxbbbbbbbbbbxx.",
-        ".xxbbbbb..bbbxx.",
-        ".xxbbbddddbbbxx.",
-        "..bbbddddddbbb..",
-        "..bbbddbbddbbb..",
-        "..ddd..bb..ddd..",
-        "..ddddbbbbdddd..",
-        "..ddssbbbbssdd..",
-        "..ddssbbbbssdd..",
-        "...ss..bb..ss...",
-        "...ss..bb..ss...",
+        "..xxxxxxxxxxxxxx..",
+        ".xxxhhhhhhhhhhxxx.",
+        ".xxxhheeeehhhxxxx.",
+        ".xxxhhhhhhhhhhxxx.",
+        ".xxxbbbbbbbbbbxxx.",
+        ".xxxbbxxxxxxbbxxx.",
+        ".xxxbbbbbbbbbbxxx.",
+        ".xxxbbbbbbbbbbxxx.",
+        ".xxxbbbbbbbbbbxxx.",
+        ".xxxbbbbbbbbbbxxx.",
+        ".xxxbbbbb..bbbxxx.",
+        ".xxxbbbbb..bbbxxx.",
+        "..xxxbbbddddbbbxx.",
+        "..xxxbbbddddbbbxx.",
+        "..xxxbbbddbbbbbxx.",
+        "..xxxddd..bbdddxx.",
+        "..xxxddd..bbdddxx.",
+        "..xxxxddbbbbddxxx.",
+        "..xxxddssbbssddxx.",
+        "..xxxddssbbssddxx.",
+        "..xxxddssbbssddxx.",
+        "...xxxss..bbssxxx.",
+        "...xxxss..bbssxxx.",
         "................",
         "................",
       ];
     }
 
     if (key === 'spitter') {
+      // Very small, compact spitter - half height with bloated head for spitting
       return [
-        "....hhhhhhhh....",
-        "...hhhhhhhhhh...",
-        "...hhe..e.hh....",
-        "...hhxxxxxxhh...",
-        "...bbxxxxxxbb...",
-        "..bbbxxxxxxbbb..",
-        "..bbbbbbbbbbbb..",
-        ".bbbbbb..bbbbbb.",
-        ".bbb..d..d..bbb.",
-        ".bbb..dddd..bbb.",
-        "..bbb..dd..bbb..",
-        "..bbb.bbbbbb....",
-        "..ddd..ddd......",
-        ".dddd..dddd.....",
-        ".ddss..ssdd.....",
-        "..ss....ss......",
-        "..ss....ss......",
+        "................",  // pad top (8 rows)
         "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "......hhhhhh......",  // 14 -> 18
+        ".....hhhhhhhh.....",  // 14 -> 18
+        ".....hheeeehh.....",  // 14 -> 18
+        "....hhhxxxxhhh....",  // 15 -> 18
+        "...bbbbxxxxbbbb...",  // 15 -> 18
+        "...bbbbbbbbbbbb...",  // 15 -> 18
+        "...bbbbbbbbbbbb...",  // 14 -> 18
+        "...bbbb..bbbbbb...",  // 14 -> 18
+        "..bbbb..dd..bbbb..",  // 15 -> 18
+        "...bbb.bbbb.bbb...",  // 15 -> 18
+        "...ddd..dd..ddd...",  // 15 -> 18
+        "..dddd..dd..dddd..",  // 15 -> 18
+        "..ddss..ss..ssdd..",  // 15 -> 18
+        "...ss....ss..ss...",  // 15 -> 18
+        "................",  // pad bottom (3 rows)
         "................",
         "................",
       ];
     }
 
     if (key === 'jumper') {
-      // Crouched legs, long arms — ready to leap
+      // Small crouched zombie with long arms, compact but powerful
       return [
-        "....hhhhhhhh....",
-        "...hhhhhhhhhh...",
-        "...hhe..ehhhh...",
-        "...hhhwwhhhhh...",
-        "....bbbbbbbb....",
-        "..bbbbb..bbbbb..",
-        ".bbbbbbbbbbbbb..",
-        ".bbbb......bbbb.",
-        "..bbb......bbb..",
-        "...bb..dd..bb...",
-        "...bb..dd..bb...",
-        "..bbddddddddbb.",
-        ".bb..dddddd..bb.",
-        ".dd..ssssss..dd.",
-        "..ss..ssss..ss..",
-        "..ss........ss..",
-        ".ss..........ss.",
-        "ss............ss",
+        "................",  // pad top (2 rows)
+        "................",
+        "......hhhhhh......",  // 14 -> 18
+        ".....hhhhhhhh.....",  // 14 -> 18
+        ".....hheeehhh.....",  // 14 -> 18
+        "....hhhwwhhhh.....",  // 15 -> 18
+        "......bbbbbb......",  // 14 -> 18
+        "....bbbb..bbbb....",  // 14 -> 18
+        "...bbbbbbbbbbbb...",  // 14 -> 18
+        "...bbbbbbbbbbbb...",  // 14 -> 18
+        "...bbbb....bbbb...",  // 14 -> 18
+        "....bbb....bbb....",  // 14 -> 18
+        ".....bb..dd..bb...",  // 14 -> 18
+        ".....bb..dd..bb...",  // 14 -> 18
+        "....bbddddddbb....",  // 14 -> 18
+        "...bb..dddd..bb...",  // 14 -> 18
+        "...bb..dddd..bb...",  // 14 -> 18
+        "...dd..ssss..dd...",  // 14 -> 18
+        "....ss.ssss.ss....",  // 14 -> 18
+        "....ss.ssss.ss....",  // 14 -> 18
+        "...ss..ssss..ss...",  // 14 -> 18
+        "..ss...ssss...ss..",  // 14 -> 18
+        "................",
         "................",
         "................",
       ];
     }
 
-    // basic default
+    // basic default - small standard zombie
     return [
-      "....hhhhhhhh....",
-      "...hhhhhhhhhh...",
-      "...hhe..e.hh....",
-      "...hhhhhhhhhh...",
-      "....bbbbbbbb....",
-      "...bb....bbbb...",
-      "..bbbbbbbbbbbb..",
-      "..bbbbbbbbbbbb..",
-      "..bbbdd..ddbbb..",
-      "..bbbdd..ddbbb..",
-      "...bbb....bbb...",
-      "...bbb....bbb...",
-      "..ddd..dd..ddd..",
-      "..dddddddddddd..",
-      "..ddss....ssdd..",
-      "...ss......ss...",
+      "................",  // pad top (4 rows)
+      "................",
+      "................",
+      "................",
+      "......hhhhhh......",  // 14 -> 18
+      ".....hhhhhhhh.....",  // 14 -> 18
+      ".....hhe..ehh.....",  // 14 -> 18
+      ".....hhhhhhhh.....",  // 14 -> 18
+      "......bbbbbb......",  // 14 -> 18
+      ".....bb..bbbb.....",  // 14 -> 18
+      "....bbbbbbbbbb....",  // 14 -> 18
+      "....bbbbbbbbbb....",  // 14 -> 18
+      "...bbbdd..dbbb....",  // 15 -> 18
+      "...bbbdd..dbbb....",  // 15 -> 18
+      ".....bbb..bbb.....",  // 14 -> 18
+      ".....bbb..bbb.....",  // 14 -> 18
+      "....ddd.dd.ddd....",  // 14 -> 18
+      "....dddddddddd....",  // 14 -> 18
+      "....ddss..ssdd....",  // 14 -> 18
+      ".....ss....ss.....",  // 14 -> 18
+      ".....ss....ss.....",  // 14 -> 18
       "................",
       "................",
       "................",
@@ -238,49 +262,61 @@ export class SpriteFactory {
 
   getPlantPattern(key) {
     if (key === 'super_sunflower') {
+      // Massive double-layered flower head, very tall
       return [
-        "..hhhhhhhhhhhh..",
-        ".hhhhhhhhhhhhhh.",
-        ".hhhhwhhhwhhhhh.",
-        ".hhhhhhhhhhhhhh.",
-        ".hhhhhhhhhhhhhh.",
-        "..hhhhwwhhhhhh..",
-        "..hhhdhhhhdhhh..",
-        "..hhhdhhhdhhhd..",
-        "...hhhhhhhhhh...",
-        "...hhhhhhhhhh...",
-        "......ssss......",
-        ".....ss..ss.....",
-        ".....ss..ss.....",
-        "....pppppppp....",
-        "...pppppppppp...",
-        "..pppppppppppp..",
-        "..pppppppppppp..",
-        "....pppppppp....",
+        "..hhhhhhhhhhhhhh..",
+        ".hhhhhhhhhhhhhhhh.",
+        ".hhhhhwhhhhwhhhhh.",
+        ".hhhhhhhhhhhhhhhh.",
+        ".hhhhhhhhhhhhhhhh.",
+        ".hhhhhhhhhhhhhhhh.",
+        "..hhhhhwwwwhhhhh..",
+        "..hhhhhwwwwhhhhh..",
+        "..hhhhdhhhhhdhhh..",
+        "..hhhhdhhhhhdhhh..",
+        "...hhhhhhhhhhhh...",
+        "...hhhhhhhhhhhh...",
+        "......ssssss......",
+        ".....ssssssss.....",
+        ".....ssssssss.....",
+        ".....ssssssss.....",
+        "....pppppppppp....",
+        "...pppppppppppp...",
+        "..pppppppppppppp..",
+        "..pppppppppppppp..",
+        "..pppppppppppppp..",
+        "..pppppppppppppp..",
+        "....pppppppppp....",
         "................",
         "................",
       ];
     }
 
     if (key === 'sunflower') {
+      // Classic sunflower with distinct petal pattern
       return [
-        "..hhhhhhhhhhhh..",
-        ".hhhhhhhhhhhhhh.",
-        ".hhhwheeehwhehh.",
-        ".hhhhhhhhhhhhhh.",
-        ".hhhhhhwwhhhhhh.",
-        "..hhhdhhhhdhhh..",
-        "..hhhdhhhdhhhd..",
-        "...hhhhhhhhhh...",
-        "......ssss......",
-        ".....ss..ss.....",
-        ".....ss..ss.....",
-        "....pppppppp....",
-        "...pppppppppp...",
-        "..pppppppppppp..",
-        "..pppppppppppp..",
-        "....pppppppp....",
+        "................",  // pad top (3 rows)
         "................",
+        "................",
+        "...hhhhhhhhhhhh...",  // 16 -> 18
+        "..hhhhhhhhhhhhhh..",  // 16 -> 18
+        "..hhhwheeehwhehh..",  // 16 -> 18
+        "..hhhhhwwwwhhhhh..",  // 16 -> 18
+        "..hhhhhwwwwhhhhh..",  // 16 -> 18
+        "...hhhdhhhhdhhh...",  // 16 -> 18
+        "...hhhdhhhdhhhd...",  // 16 -> 18
+        "...hhhdhhhdhhhd...",  // 16 -> 18
+        "....hhhhhhhhhh....",  // 16 -> 18
+        ".......ssss.......",  // 16 -> 18
+        "......ssssss......",  // 16 -> 18
+        "......ssssss......",  // 16 -> 18
+        "......ssssss......",  // 16 -> 18
+        ".....pppppppp.....",  // 16 -> 18
+        "....pppppppppp....",  // 16 -> 18
+        "...pppppppppppp...",  // 16 -> 18
+        "...pppppppppppp...",  // 16 -> 18
+        "...pppppppppppp...",  // 16 -> 18
+        ".....pppppppp.....",  // 16 -> 18
         "................",
         "................",
         "................",
@@ -288,75 +324,92 @@ export class SpriteFactory {
     }
 
     if (key === 'wallnut') {
+      // Round, compact defensive nut - wider and shorter
       return [
-        ".......dd.......",
-        "......dddd......",
-        ".....ddhhdd.....",
-        "....ddhhhhdd....",
-        "...dddhhehddd...",
-        "..dddhhhhhhddd..",
-        "..dddhhhhhhddd..",
-        ".dddhhddhhddhdd.",
-        ".ddhhhhhhhhhhdd.",
-        ".ddhhhhhhhhhhdd.",
-        "..ddhhhhhhhhdd..",
-        "..ddhhh..hhhdd..",
-        "..ddhhh..hhhdd..",
-        "...ddhhhhhhdd...",
-        "....dddddddd....",
+        "................",  // pad top (5 rows)
         "................",
         "................",
         "................",
+        "................",
+        ".......dddd.......",  // 17 -> 18
+        "......dddddd......",  // 17 -> 18
+        ".....ddhhhhdd.....",  // 17 -> 18
+        "....ddhhhhhhdd....",  // 17 -> 18
+        "...dddhheeehddd...",  // 17 -> 18
+        "..dddhhhhhhhhddd..",  // 17 -> 18
+        "..dddhhhhhhhhddd..",  // 17 -> 18
+        ".dddhhhhhhhhhhdd..",  // 17 -> 18
+        ".ddhhhhhhhhhhhhdd.",  // 17 -> 18
+        ".ddhhhhhhhhhhhhdd.",  // 17 -> 18
+        ".ddhhhhhhhhhhhhdd.",  // 17 -> 18
+        "..ddhhhhhhhhhhdd..",  // 17 -> 18
+        "..ddhhhhhhhhhhdd..",  // 17 -> 18
+        "..ddhhhhhhhhhhdd..",  // 17 -> 18
+        "...ddhhhhhhhhdd...",  // 17 -> 18
+        "....dddddddddd....",  // 17 -> 18
+        "....dddddddddd....",  // 17 -> 18
+        "....dddddddddd....",  // 17 -> 18
         "................",
         "................",
       ];
     }
 
     if (key === 'snowpea') {
+      // Icy blue-tinted head, frosty appearance with icicle details
       return [
+        "................",  // pad top (2 rows)
         "................",
-        "....hhhhhhhh....",
-        "...hhhhhhhhhh...",
-        "..hhhe..ehhhh...",
-        "..hhhhwwhhhhh...",
-        "...hhdhhhdhh....",
-        ".....ss..ss.....",
-        ".....ss..ss.....",
-        ".....ss..ss.....",
-        "......ssss......",
-        "......ssss......",
-        ".....ss..ss.....",
-        "....pppppppp....",
-        "...pppppppppp...",
-        "..pppppppppppp..",
-        "..pppppppppppp..",
-        "....pppppppp....",
+        "................",  // 18 -> 18 (already correct width)
+        ".....hhhhhhhh.....",  // 16 -> 18
+        "....hhhhhhhhhh....",  // 16 -> 18
+        "...hhheeeehhhh....",  // 16 -> 18
+        "...hhhhwwwwhhhh...",  // 16 -> 18
+        "...hhhwwwwhhhh....",  // 17 -> 18
+        "....hhhwwhhhh.....",  // 17 -> 18
+        "......ssssss......",  // 16 -> 18
+        "......ssssss......",  // 16 -> 18
+        "......ssssss......",  // 16 -> 18
+        "......ssssss......",  // 16 -> 18
+        ".......ssssss.....",  // 16 -> 18
+        ".......ssssss.....",  // 16 -> 18
+        ".....ssssssss.....",  // 17 -> 18
+        "....pppppppppp....",  // 17 -> 18
+        "...pppppppppppp...",  // 17 -> 18
+        "..pppppppppppppp..",  // 17 -> 18
+        "..pppppppppppppp..",  // 17 -> 18
+        "..pppppppppppppp..",  // 17 -> 18
+        "....pppppppppp....",  // 17 -> 18
         "................",
         "................",
         "................",
       ];
     }
 
-    // peashooter default
+    // peashooter default - classic shooter with mouth
     return [
+      "................",  // pad top (3 rows)
       "................",
-      "....hhhhhhhh....",
-      "...hhhhhhhhhh...",
-      "..hhhe..ehhhh...",
-      "..hhhhhhhhhhh...",
-      "...hhdhhhdhh....",
-      ".....ss..ss.....",
-      ".....ss..ss.....",
-      "......ssss......",
-      "......ssss......",
-      ".....ss..ss.....",
-      ".....ss..ss.....",
-      "....pppppppp....",
-      "...pppppppppp...",
-      "..pppppppppppp..",
-      "..pppppppppppp..",
-      "....pppppppp....",
       "................",
+      "................",  // 18 -> 18 (already correct width)
+      ".....hhhhhhhh.....",  // 16 -> 18
+      "....hhhhhhhhhh....",  // 16 -> 18
+      "...hhhe..ehhhh....",  // 16 -> 18
+      "...hhhhhhhhhhh....",  // 16 -> 18
+      "....hhdhhhdhh.....",  // 16 -> 18
+      ".....hhh..hhh.....",  // 16 -> 18
+      "......ss..ss......",  // 16 -> 18
+      "......ss..ss......",  // 16 -> 18
+      "......ss..ss......",  // 16 -> 18
+      ".......ssss.......",  // 16 -> 18
+      ".......ssss.......",  // 16 -> 18
+      "......ss..ss......",  // 16 -> 18
+      "......ss..ss......",  // 16 -> 18
+      ".....pppppppp.....",  // 16 -> 18
+      "....pppppppppp....",  // 16 -> 18
+      "...pppppppppppp...",  // 16 -> 18
+      "...pppppppppppp...",  // 16 -> 18
+      "...pppppppppppp...",  // 16 -> 18
+      ".....pppppppp.....",  // 16 -> 18
       "................",
       "................",
     ];
@@ -385,7 +438,7 @@ export class SpriteFactory {
     const width = pattern[0].length;
     const height = pattern.length;
 
-    // Scale rows
+    // Scale rows horizontally (each char becomes `scale` chars)
     for (let y = 0; y < height; y++) {
       const row = pattern[y];
       let scaledRow = '';
@@ -393,25 +446,37 @@ export class SpriteFactory {
         const ch = row[x] || '.';
         scaledRow += ch.repeat(scale);
       }
+      // Scale rows vertically (repeat each row `scale` times)
       for (let sy = 0; sy < scale; sy++) {
         scaled.push(scaledRow);
       }
     }
 
-    // Pad to target size (centered vertically)
-    const padRows = Math.max(0, targetHeight - scaled.length);
-    const padTop = Math.floor(padRows / 2);
-    const padBottom = padRows - padTop;
-    const emptyRow = '.'.repeat(targetWidth);
-
-    // Ensure width matches target
-    const finalRows = scaled.map((row) => row.padEnd(targetWidth, '.'));
-
-    return [
-      ...Array(padTop).fill(emptyRow),
-      ...finalRows,
-      ...Array(padBottom).fill(emptyRow),
-    ];
+    // Calculate target width in pattern characters (targetWidth pixels / pixelSize)
+    // pixelSize is 2, so targetWidth pixels = targetWidth/2 pattern units
+    // But since we've already scaled horizontally by `scale`, we need targetWidth/2 characters
+    const targetWidthChars = targetWidth / 2;
+    const emptyRow = '.'.repeat(targetWidthChars);
+    
+    // Ensure width matches target (pad each row to targetWidthChars)
+    const finalRows = scaled.map((row) => row.padEnd(targetWidthChars, '.'));
+    
+    // Calculate target height in pattern rows (targetHeight pixels / pixelSize)
+    const targetHeightRows = targetHeight / 2;
+    
+    // If scaled pattern is taller than target, truncate from top
+    // Otherwise, pad at top to reach target height
+    if (finalRows.length >= targetHeightRows) {
+      // Take the last targetHeightRows rows (bottom portion)
+      return finalRows.slice(-targetHeightRows);
+    } else {
+      // Pad at top
+      const padRows = targetHeightRows - finalRows.length;
+      return [
+        ...Array(padRows).fill(emptyRow),
+        ...finalRows,
+      ];
+    }
   }
 }
 

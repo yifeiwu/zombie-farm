@@ -3,20 +3,21 @@
 // =============================================================================
 import Phaser from 'phaser';
 
-export class LivingEntity extends Phaser.GameObjects.Sprite {
+export class LivingEntity extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, textureKey, hp) {
     super(scene, x, y, textureKey);
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    // Physics body is now enabled for Phaser.Physics.Arcade.Sprite
 
     this.hp = hp;
     this.maxHp = hp;
     this.isDead = false;
 
     // HP Bar Setup
-    this.hpBarOffset = { x: 0, y: -36 };
-    this.hpBarWidth = 36;
-    this.hpBarHeight = 4;
+    this.hpBarOffset = { x: 0, y: -72 };
+    this.hpBarWidth = 72;
+    this.hpBarHeight = 8;
     
     this.hpBar = scene.add.rectangle(x, y + this.hpBarOffset.y, this.hpBarWidth, this.hpBarHeight, 0x00ff00).setOrigin(0.5, 0.5);
     this.hpBarBg = scene.add.rectangle(x, y + this.hpBarOffset.y, this.hpBarWidth, this.hpBarHeight, 0x333333).setOrigin(0.5, 0.5);

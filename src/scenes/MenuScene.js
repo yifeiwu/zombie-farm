@@ -19,11 +19,11 @@ export class MenuScene extends Phaser.Scene {
 
     // Faint grid lines
     g.lineStyle(1, 0x2a2a4e, 0.3);
-    for (let x = 0; x < GAME_WIDTH; x += 80) {
+    for (let x = 0; x < GAME_WIDTH; x += 160) {
       g.moveTo(x, 0);
       g.lineTo(x, GAME_HEIGHT);
     }
-    for (let y = 0; y < GAME_HEIGHT; y += 80) {
+    for (let y = 0; y < GAME_HEIGHT; y += 160) {
       g.moveTo(0, y);
       g.lineTo(GAME_WIDTH, y);
     }
@@ -34,17 +34,17 @@ export class MenuScene extends Phaser.Scene {
     vignette.fillStyle(0x000000, 0.4);
     vignette.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
     vignette.fillStyle(0x1a1a2e, 0.6);
-    vignette.fillCircle(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 40, 420);
+    vignette.fillCircle(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 80, 840);
 
     // =====================================================================
     // Shambling zombie horde in the background
     // =====================================================================
     const zombieKeys = Object.values(ZOMBIE_TYPES).map((t) => t.key);
-    const hordeCount = 10;
+    const hordeCount = 20;
     for (let i = 0; i < hordeCount; i++) {
       const key = zombieKeys[i % zombieKeys.length];
-      const startX = Phaser.Math.Between(40, GAME_WIDTH - 40);
-      const startY = Phaser.Math.Between(340, 520);
+      const startX = Phaser.Math.Between(80, GAME_WIDTH - 80);
+      const startY = Phaser.Math.Between(680, 1040);
       const z = this.add.image(startX, startY, key)
         .setAlpha(Phaser.Math.FloatBetween(0.08, 0.2))
         .setScale(Phaser.Math.FloatBetween(1.0, 1.8))
@@ -53,8 +53,8 @@ export class MenuScene extends Phaser.Scene {
       // Slow shamble drift
       this.tweens.add({
         targets: z,
-        x: z.x + Phaser.Math.Between(-50, 50),
-        y: z.y + Phaser.Math.Between(-12, 12),
+        x: z.x + Phaser.Math.Between(-100, 100),
+        y: z.y + Phaser.Math.Between(-24, 24),
         angle: z.angle + Phaser.Math.Between(-4, 4),
         duration: Phaser.Math.Between(3000, 6000),
         yoyo: true,
@@ -68,20 +68,20 @@ export class MenuScene extends Phaser.Scene {
     // =====================================================================
 
     // Glow behind title
-    const glowTitle = this.add.text(GAME_WIDTH / 2, 90, 'ZOMBIE FARM', {
-      fontSize: '76px',
+    const glowTitle = this.add.text(GAME_WIDTH / 2, 180, 'ZOMBIE FARM', {
+      fontSize: '152px',
       fontFamily: 'Georgia, serif',
       color: '#ff6b6b',
       fontStyle: 'bold',
     }).setOrigin(0.5).setAlpha(0.15).setScale(1.05);
 
-    const title = this.add.text(GAME_WIDTH / 2, 90, 'ZOMBIE FARM', {
-      fontSize: '76px',
+    const title = this.add.text(GAME_WIDTH / 2, 180, 'ZOMBIE FARM', {
+      fontSize: '152px',
       fontFamily: 'Georgia, serif',
       color: '#ff6b6b',
       fontStyle: 'bold',
       stroke: '#000000',
-      strokeThickness: 6,
+      strokeThickness: 12,
     }).setOrigin(0.5);
 
     // Subtle pulse on the glow
@@ -97,19 +97,19 @@ export class MenuScene extends Phaser.Scene {
     });
 
     // Subtitle with typewriter-style fade
-    const subtitle = this.add.text(GAME_WIDTH / 2, 160, 'Command the Horde', {
-      fontSize: '24px',
+    const subtitle = this.add.text(GAME_WIDTH / 2, 320, 'Command the Horde', {
+      fontSize: '48px',
       color: '#cccccc',
       fontStyle: 'italic',
       fontFamily: 'Georgia, serif',
       stroke: '#000000',
-      strokeThickness: 2,
+      strokeThickness: 4,
     }).setOrigin(0.5).setAlpha(0);
 
     this.tweens.add({
       targets: subtitle,
       alpha: 1,
-      y: subtitle.y - 4,
+      y: subtitle.y - 8,
       duration: 800,
       delay: 400,
       ease: 'Sine.easeOut',
@@ -118,17 +118,17 @@ export class MenuScene extends Phaser.Scene {
     // =====================================================================
     // Stage selection
     // =====================================================================
-    this.add.text(GAME_WIDTH / 2, 210, '— SELECT STAGE —', {
-      fontSize: '14px',
+    this.add.text(GAME_WIDTH / 2, 420, '— SELECT STAGE —', {
+      fontSize: '28px',
       color: '#888888',
       fontFamily: 'Arial, sans-serif',
-      letterSpacing: 4,
+      letterSpacing: 8,
     }).setOrigin(0.5);
 
-    const stageY = 295;
-    const cardW = 180;
-    const cardH = 150;
-    const stageSpacing = cardW + 20;
+    const stageY = 590;
+    const cardW = 360;
+    const cardH = 300;
+    const stageSpacing = cardW + 40;
     const startStageX = GAME_WIDTH / 2 - (STAGES.length - 1) * stageSpacing / 2;
     const difficultyLabels = ['EASY', 'MEDIUM', 'HARD'];
     const difficultyColors = ['#4caf50', '#ffaa00', '#ff6b6b'];
@@ -143,48 +143,48 @@ export class MenuScene extends Phaser.Scene {
 
       // Difficulty badge
       const badgeColor = Phaser.Display.Color.HexStringToColor(difficultyColors[i]).color;
-      this.add.rectangle(x, stageY - cardH / 2 + 12, 60, 16, badgeColor, 0.2)
-        .setStrokeStyle(1, badgeColor, 0.5);
-      this.add.text(x, stageY - cardH / 2 + 12, difficultyLabels[i], {
-        fontSize: '11px',
+      this.add.rectangle(x, stageY - cardH / 2 + 24, 120, 32, badgeColor, 0.2)
+        .setStrokeStyle(2, badgeColor, 0.5);
+      this.add.text(x, stageY - cardH / 2 + 24, difficultyLabels[i], {
+        fontSize: '22px',
         color: difficultyColors[i],
         fontStyle: 'bold',
         fontFamily: 'Arial, sans-serif',
       }).setOrigin(0.5);
 
       // Stage number
-      this.add.text(x, stageY - 20, `Stage ${stage.id}`, {
-        fontSize: '16px',
+      this.add.text(x, stageY - 40, `Stage ${stage.id}`, {
+        fontSize: '32px',
         fontFamily: 'Georgia, serif',
         color: '#ff6b6b',
         fontStyle: 'bold',
         stroke: '#000000',
-        strokeThickness: 2,
+        strokeThickness: 4,
       }).setOrigin(0.5);
 
       // Stage name
-      this.add.text(x, stageY + 2, stage.name, {
-        fontSize: '15px',
+      this.add.text(x, stageY + 4, stage.name, {
+        fontSize: '30px',
         color: '#ffffff',
         fontFamily: 'Arial, sans-serif',
         fontStyle: 'bold',
         stroke: '#000000',
-        strokeThickness: 2,
+        strokeThickness: 4,
       }).setOrigin(0.5);
 
       // Description
-      this.add.text(x, stageY + 22, stage.description, {
-        fontSize: '11px',
+      this.add.text(x, stageY + 44, stage.description, {
+        fontSize: '22px',
         color: '#999999',
         fontFamily: 'Arial, sans-serif',
-        wordWrap: { width: cardW - 20 },
+        wordWrap: { width: cardW - 40 },
         align: 'center',
       }).setOrigin(0.5, 0);
 
       // Stats line
       const wc = stage.waveConfig;
-      this.add.text(x, stageY + cardH / 2 - 14, `${wc.maxWaves} waves  •  HP ${stage.houseHp}`, {
-        fontSize: '11px',
+      this.add.text(x, stageY + cardH / 2 - 28, `${wc.maxWaves} waves  •  HP ${stage.houseHp}`, {
+        fontSize: '22px',
         color: '#778899',
         fontFamily: 'Arial, sans-serif',
       }).setOrigin(0.5);
@@ -252,27 +252,27 @@ export class MenuScene extends Phaser.Scene {
     ];
 
     instructions.forEach((text, idx) => {
-      this.add.text(GAME_WIDTH / 2, 400 + idx * 24, text, {
-        fontSize: '13px',
+      this.add.text(GAME_WIDTH / 2, 800 + idx * 48, text, {
+        fontSize: '26px',
         color: '#8888aa',
         fontFamily: 'Arial, sans-serif',
         stroke: '#000000',
-        strokeThickness: 2,
+        strokeThickness: 4,
       }).setOrigin(0.5);
     });
 
     // Divider line
     const divG = this.add.graphics();
-    divG.lineStyle(1, 0x333355, 0.5);
-    divG.moveTo(GAME_WIDTH / 2 - 200, 390);
-    divG.lineTo(GAME_WIDTH / 2 + 200, 390);
+    divG.lineStyle(2, 0x333355, 0.5);
+    divG.moveTo(GAME_WIDTH / 2 - 400, 780);
+    divG.lineTo(GAME_WIDTH / 2 + 400, 780);
     divG.strokePath();
 
     // =====================================================================
     // Footer
     // =====================================================================
-    this.add.text(GAME_WIDTH - 10, GAME_HEIGHT - 10, 'v0.2.0', {
-      fontSize: '11px',
+    this.add.text(GAME_WIDTH - 20, GAME_HEIGHT - 20, 'v0.2.0', {
+      fontSize: '22px',
       color: '#333333',
     }).setOrigin(1, 1);
 
@@ -280,8 +280,8 @@ export class MenuScene extends Phaser.Scene {
     // Fullscreen button (useful on mobile)
     // =====================================================================
     if (!this.sys.game.device.os.desktop) {
-      const fsBtn = this.add.text(GAME_WIDTH - 14, 14, '⛶', {
-        fontSize: '28px',
+      const fsBtn = this.add.text(GAME_WIDTH - 28, 28, '⛶', {
+        fontSize: '56px',
         color: '#666688',
       }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
 

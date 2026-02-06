@@ -12,16 +12,16 @@ export class BootScene extends Phaser.Scene {
 
   preload() {
     // Show loading bar
-    const barW = 320;
-    const barH = 20;
+    const barW = 640;
+    const barH = 40;
     const barX = (GAME_WIDTH - barW) / 2;
     const barY = (GAME_HEIGHT - barH) / 2;
 
-    const bg = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, barW + 4, barH + 4, 0x444444);
-    const bar = this.add.rectangle(barX + 2, barY + 2, 0, barH, 0xff6b6b).setOrigin(0, 0);
+    const bg = this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, barW + 8, barH + 8, 0x444444);
+    const bar = this.add.rectangle(barX + 4, barY + 4, 0, barH, 0xff6b6b).setOrigin(0, 0);
 
-    const loadingText = this.add.text(GAME_WIDTH / 2, barY - 30, 'Raising the dead...', {
-      fontSize: '18px',
+    const loadingText = this.add.text(GAME_WIDTH / 2, barY - 60, 'Raising the dead...', {
+      fontSize: '36px',
       color: '#ffffff',
     }).setOrigin(0.5);
 
@@ -49,19 +49,19 @@ export class BootScene extends Phaser.Scene {
     }
 
     // --- Projectile ---
-    spriteFactory.generateCircleTexture('pea', 0x4caf50, 6);
-    spriteFactory.generateLaserTexture('sunbeam', 0xffd54f, GAME_WIDTH, 6);
-    spriteFactory.generateCircleTexture('snowpea_projectile', 0x03a9f4, 6);
-    spriteFactory.generateCircleTexture('spit', 0x8a3c5b, 8);
+    spriteFactory.generateCircleTexture('pea', 0x4caf50, 12);
+    spriteFactory.generateLaserTexture('sunbeam', 0xffd54f, GAME_WIDTH, 12);
+    spriteFactory.generateCircleTexture('snowpea_projectile', 0x03a9f4, 12);
+    spriteFactory.generateCircleTexture('spit', 0x8a3c5b, 16);
 
     // --- Brain (currency) pickup ---
     spriteFactory.generateBrainTexture();
 
     // --- UI icons ---
-    spriteFactory.generateCircleTexture('brain_icon', 0xff9ff3, 12);
+    spriteFactory.generateCircleTexture('brain_icon', 0xff9ff3, 24);
 
     // --- Particle (white circle for tinting) ---
-    spriteFactory.generateCircleTexture('particle_white', 0xffffff, 6);
+    spriteFactory.generateCircleTexture('particle_white', 0xffffff, 12);
   }
 
 }

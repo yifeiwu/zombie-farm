@@ -7,11 +7,11 @@ import { GRID_OFFSET_X, GRID_COLS, CELL_WIDTH } from '../config/constants.js';
 const GRID_LEFT = GRID_OFFSET_X;
 const GRID_RIGHT = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH;
 
-export class Projectile extends Phaser.GameObjects.Sprite {
+export class Projectile extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
     super(scene, x, y, 'pea'); // Default texture, will change on fire
-    // Note: Do NOT add to scene/physics here if using a Group with runChildUpdate
-    // But since we use a custom pool manager, we might rely on the group to do it.
+    // Note: When used with physics.add.group(), Phaser automatically adds
+    // the sprite to the scene and creates the physics body
   }
 
   fire(x, y, textureKey, damage, velocityX, target, options = {}) {

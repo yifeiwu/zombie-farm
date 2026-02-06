@@ -25,13 +25,8 @@ export class ProjectileManager {
   spawnPlantProjectile(x, y, textureKey, damage, velocityX, target, options) {
     let proj = this.plantProjectiles.get(x, y);
     if (proj) {
-      if (!proj.body) {
-         // If fresh from the pool and hasn't been enabled for physics yet
-         this.scene.physics.add.existing(proj);
-      }
-      if (!proj.scene) {
-        this.scene.add.existing(proj);
-      }
+      // Phaser.Physics.Arcade.Sprite automatically has a body and is added to scene
+      // by physics.add.group(), so we can directly fire it
       proj.fire(x, y, textureKey, damage, velocityX, target, options);
     }
   }
@@ -39,12 +34,8 @@ export class ProjectileManager {
   spawnZombieProjectile(x, y, textureKey, damage, velocityX, target, options) {
     let proj = this.zombieProjectiles.get(x, y);
     if (proj) {
-      if (!proj.body) {
-        this.scene.physics.add.existing(proj);
-      }
-      if (!proj.scene) {
-        this.scene.add.existing(proj);
-      }
+      // Phaser.Physics.Arcade.Sprite automatically has a body and is added to scene
+      // by physics.add.group(), so we can directly fire it
       proj.fire(x, y, textureKey, damage, velocityX, target, options);
     }
   }

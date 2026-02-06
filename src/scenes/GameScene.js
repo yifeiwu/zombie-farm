@@ -25,11 +25,10 @@ export class GameScene extends Phaser.Scene {
     super({ key: 'GameScene' });
   }
 
-  create(data) {
+  init(data) {
     // --- Stage config ---
     this.stageIndex = (data && data.stageIndex != null) ? data.stageIndex : 0;
     this.stageConfig = STAGES[this.stageIndex] || STAGES[0];
-    const stageWave = this.stageConfig.waveConfig;
 
     // --- State ---
     this.brains = STARTING_BRAINS;
@@ -38,6 +37,10 @@ export class GameScene extends Phaser.Scene {
     this.isGameOver = false;
     this.houseHp = this.stageConfig.houseHp;
     this.houseMaxHp = this.stageConfig.houseHp;
+  }
+
+  create() {
+    const stageWave = this.stageConfig.waveConfig;
 
     // --- Groups ---
     this.zombies = this.physics.add.group();
@@ -166,26 +169,27 @@ export class GameScene extends Phaser.Scene {
 
     const houseEmojiY = housePanelTop + housePanelHeight * 0.35;
     this.houseEmoji = this.add.text(houseX, houseEmojiY, '🏠', {
-      fontSize: '48px',
+      fontSize: '120px',
     }).setOrigin(0.5);
 
     const destroyTextY = housePanelTop + housePanelHeight * 0.55;
     this.add.text(houseX, destroyTextY, 'DESTROY', {
-      fontSize: '14px',
+      fontSize: '36px',
       color: '#ff6b6b',
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
     // House HP bar
-    const hpBarWidth = GRID_OFFSET_X - 40;
+    const hpBarWidth = GRID_OFFSET_X - 80;
     const hpBarY = housePanelTop + housePanelHeight * 0.72;
-    this.houseHpBarBg = this.add.rectangle(houseX, hpBarY, hpBarWidth, 10, 0x333333)
+    this.houseHpBarBg = this.add.rectangle(houseX, hpBarY, hpBarWidth, 20, 0x333333)
       .setDepth(10);
-    this.houseHpBar = this.add.rectangle(houseX, hpBarY, hpBarWidth, 10, 0x4caf50)
+    this.houseHpBar = this.add.rectangle(houseX, hpBarY, hpBarWidth, 20, 0x4caf50)
       .setDepth(11);
-    this.houseHpText = this.add.text(houseX, hpBarY + 14, `${this.houseHp} / ${this.houseMaxHp}`, {
-      fontSize: '11px',
+    this.houseHpText = this.add.text(houseX, hpBarY + 28, `${this.houseHp} / ${this.houseMaxHp}`, {
+      fontSize: '40px',
       color: '#ffffff',
+      fontStyle: 'bold',
     }).setOrigin(0.5, 0).setDepth(11);
   }
 
@@ -197,7 +201,7 @@ export class GameScene extends Phaser.Scene {
     for (let row = 0; row < GRID_ROWS; row++) {
       const labelY = GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2;
       this.add.text(labelX, labelY, '☠ SPAWN', {
-        fontSize: '14px',
+        fontSize: '36px',
         color: '#ff6b6b',
         fontStyle: 'bold',
       }).setOrigin(0.5);
@@ -234,7 +238,7 @@ export class GameScene extends Phaser.Scene {
 
     if (row >= 0 && row < GRID_ROWS && pointer.x >= spawnX - CELL_WIDTH) {
       const y = GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2;
-      this.rowHighlight.setPosition(spawnX + 18, y);
+      this.rowHighlight.setPosition(spawnX + 36, y);
       this.rowHighlight.setVisible(true);
     } else {
       this.rowHighlight.setVisible(false);
@@ -255,7 +259,7 @@ export class GameScene extends Phaser.Scene {
     this.events.emit(EVENTS.BRAINS_CHANGED, this.brains);
 
     // Spawn position: right edge of the grid
-    const x = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH + 20;
+    const x = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH + 40;
     const y = GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2;
 
     const zombie = new Zombie(this, x, y, type);
@@ -286,7 +290,7 @@ export class GameScene extends Phaser.Scene {
       const texKey = isSunbeam ? 'sunbeam' : (plant.slowFactor ? 'snowpea_projectile' : 'pea');
       const speed = plant.projectileSpeed || 200;
       this.projectileManager.spawnPlantProjectile(
-        plant.x + 20, plant.y,
+        plant.x + 40, plant.y,
         texKey,
         plant.damage,
         speed, // velocity to the right
@@ -303,7 +307,7 @@ export class GameScene extends Phaser.Scene {
     this.events.on(EVENTS.ZOMBIE_SPIT, (zombie, target) => {
       const speed = zombie.projectileSpeed || 150;
       this.projectileManager.spawnZombieProjectile(
-        zombie.x - 20, zombie.y,
+        zombie.x - 40, zombie.y,
         'spit',
         zombie.damage,
         -speed, // velocity to the left
@@ -437,11 +441,11 @@ export class GameScene extends Phaser.Scene {
       const highlight = this.add.rectangle(
         x,
         y,
-        CELL_WIDTH - 10,
-        CELL_HEIGHT - 10,
+        CELL_WIDTH - 20,
+        CELL_HEIGHT - 20,
         0xffffff,
         0.08
-      ).setStrokeStyle(1, 0xffffff, 0.5).setDepth(4);
+      ).setStrokeStyle(2, 0xffffff, 0.5).setDepth(4);
 
       const ghost = this.add.image(x, y, config.key)
         .setAlpha(0.35)

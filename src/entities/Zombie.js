@@ -35,8 +35,8 @@ export class Zombie extends LivingEntity {
     this.currentSpeed = this.speed;
 
     // Physics body setup - zombies move LEFT (toward the plants' house)
-    this.body.setSize(32, 48);
-    this.body.setOffset(8, 12);
+    this.body.setSize(64, 96);
+    this.body.setOffset(16, 24);
 
     // Subtle shuffle animation (visual only)
     this.shuffleTween = scene.tweens.add({
@@ -162,10 +162,10 @@ export class Zombie extends LivingEntity {
     const landY = this.y;
     const dist = this.x - landX;
     const duration = Math.min(800, Math.max(400, dist * 2));
-    const peakHeight = 120; // arc height in px
+    const peakHeight = 240; // arc height in px
 
     // Shadow on the ground (tracked for cleanup)
-    this.jumpShadow = this.scene.add.ellipse(this.x, this.y + 28, 30, 10, 0x000000, 0.3);
+    this.jumpShadow = this.scene.add.ellipse(this.x, this.y + 56, 60, 20, 0x000000, 0.3);
 
     // Disable physics body during the jump so we don't collide mid-air
     if (this.body) this.body.enable = false;
@@ -314,8 +314,8 @@ export class Zombie extends LivingEntity {
     }
 
     const steps = [
-      { x: this.x + 4, duration: 60, ease: 'Sine.easeOut' },
-      { x: this.x - 6, duration: 80, ease: 'Sine.easeIn' },
+      { x: this.x + 8, duration: 60, ease: 'Sine.easeOut' },
+      { x: this.x - 12, duration: 80, ease: 'Sine.easeIn' },
       { x: this.x, duration: 40, ease: 'Sine.easeOut' },
     ];
 
