@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="screen-orientation" content="landscape" />
+  <title>Zombie Farm - Command the Horde</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: #1a1a2e;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #game-container {
+      width: 100%;
+      height: 100%;
+    }
+    #game-container canvas {
+      display: block;
+      touch-action: none;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Landscape orientation prompt */
+    #rotate-prompt {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #1a1a2e;
+      color: #ffffff;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      font-family: Arial, sans-serif;
+    }
+    #rotate-prompt .icon {
+      font-size: 64px;
+      animation: rotate-hint 1.5s ease-in-out infinite;
+    }
+    #rotate-prompt p {
+      font-size: 18px;
+      color: #aaaacc;
+      text-align: center;
+      padding: 0 40px;
+    }
+    @keyframes rotate-hint {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(90deg); }
+    }
+
+    @media (orientation: portrait) and (max-width: 900px) {
+      #rotate-prompt { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container"></div>
+  <div id="rotate-prompt">
+    <div class="icon">📱</div>
+    <p>Rotate your device to landscape to play</p>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
