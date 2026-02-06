@@ -275,6 +275,21 @@ export class GameScene extends Phaser.Scene {
       ease: 'Sine.easeOut',
     });
 
+    // Spawn particle burst with additive blend for glow effect
+    const spawnEmitter = this.add.particles(x, y, 'particle_white', {
+      speed: { min: 30, max: 80 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 1.2, end: 0 },
+      alpha: { start: 0.8, end: 0 },
+      lifespan: 300,
+      tint: type.color || 0xff6b6b,
+      frequency: -1,
+      quantity: 6,
+      blendMode: Phaser.BlendModes.ADD, // Additive blending for glow
+    }).setDepth(10);
+    spawnEmitter.explode();
+    this.time.delayedCall(500, () => spawnEmitter.destroy());
+
     this.audioManager.playSound('spawn', { x: zombie.x });
     this.registerRowSpawn(row);
   }
@@ -482,6 +497,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   createExplosion(x, y, color) {
+    // Main explosion particles with additive blend for glow
     const emitter = this.add.particles(x, y, 'particle_white', {
       speed: { min: 50, max: 150 },
       angle: { min: 0, max: 360 },
@@ -490,12 +506,31 @@ export class GameScene extends Phaser.Scene {
       tint: color,
       frequency: -1,
       quantity: 8,
+      blendMode: Phaser.BlendModes.ADD, // Additive blending for bright glow
     }).setDepth(20);
 
     emitter.explode();
 
+    // Secondary particles with normal blend for contrast
+    const secondaryEmitter = this.add.particles(x, y, 'particle_white', {
+      speed: { min: 30, max: 100 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 1.0, end: 0 },
+      alpha: { start: 0.8, end: 0 },
+      lifespan: 500,
+      tint: color,
+      frequency: -1,
+      quantity: 4,
+      blendMode: Phaser.BlendModes.NORMAL, // Normal blend for solid particles
+    }).setDepth(19);
+
+    secondaryEmitter.explode();
+
     // Cleanup after particles have faded
-    this.time.delayedCall(1000, () => emitter.destroy());
+    this.time.delayedCall(1000, () => {
+      emitter.destroy();
+      secondaryEmitter.destroy();
+    });
   }
 
   showBrainPopup() {
@@ -519,10 +554,47 @@ export class GameScene extends Phaser.Scene {
   spawnBrainPickup(x, y, amount) {
     const brain = this.add.image(x, y, 'brain').setInteractive({ useHandCursor: true }).setDepth(50);
 
+    // Glow ring effect
+    const glowRing = this.add.circle(x, y, 30, 0xff9ff3, 0.2).setDepth(49);
+    
+    // Floating animation
     this.tweens.add({
       targets: brain,
       y: y - 20,
       duration: 500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+    
+    // Glow ring pulse animation
+    this.tweens.add({
+      targets: glowRing,
+      scaleX: 1.3,
+      scaleY: 1.3,
+      alpha: 0.4,
+      duration: 1000,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+    
+    // Rotation animation
+    this.tweens.add({
+      targets: brain,
+      angle: 5,
+      duration: 2000,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+    
+    // Scale pulse animation
+    this.tweens.add({
+      targets: brain,
+      scaleX: 1.1,
+      scaleY: 1.1,
+      duration: 800,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut',
@@ -533,20 +605,43 @@ export class GameScene extends Phaser.Scene {
       this.events.emit(EVENTS.BRAINS_CHANGED, this.brains);
       this.audioManager.playSound('collect', { x: brain.x });
 
-      const popup = this.add.text(brain.x, brain.y, `+${amount}`, {
-        fontSize: '14px',
+      // Collection particle burst
+      const collectEmitter = this.add.particles(brain.x, brain.y, 'particle_white', {
+        speed: { min: 50, max: 120 },
+        angle: { min: 0, max: 360 },
+        scale: { start: 0.6, end: 0 },
+        alpha: { start: 1, end: 0 },
+        lifespan: 600,
+        tint: 0xff9ff3,
+        frequency: -1,
+        quantity: 12,
+        blendMode: Phaser.BlendModes.ADD, // Additive blending for bright glow
+      }).setDepth(51);
+      collectEmitter.explode();
+      this.time.delayedCall(700, () => collectEmitter.destroy());
+
+      // Enhanced popup text
+      const popup = this.add.text(brain.x, brain.y, `+${amount} 🧠`, {
+        fontSize: '20px',
         color: '#ff9ff3',
         fontStyle: 'bold',
+        stroke: '#000000',
+        strokeThickness: 3,
       }).setOrigin(0.5).setDepth(100);
 
       this.tweens.add({
         targets: popup,
-        y: popup.y - 20,
+        y: popup.y - 40,
+        scaleX: 1.5,
+        scaleY: 1.5,
         alpha: 0,
-        duration: 800,
+        duration: 1000,
+        ease: 'Back.easeOut',
         onComplete: () => popup.destroy(),
       });
 
+      // Cleanup
+      glowRing.destroy();
       brain.destroy();
     });
 
@@ -554,10 +649,15 @@ export class GameScene extends Phaser.Scene {
     this.time.delayedCall(10000, () => {
       if (brain.active) {
         this.tweens.add({
-          targets: brain,
+          targets: [brain, glowRing],
           alpha: 0,
+          scaleX: 0.5,
+          scaleY: 0.5,
           duration: 500,
-          onComplete: () => brain.destroy(),
+          onComplete: () => {
+            brain.destroy();
+            if (glowRing.active) glowRing.destroy();
+          },
         });
       }
     });

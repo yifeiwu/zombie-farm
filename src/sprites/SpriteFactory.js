@@ -95,12 +95,50 @@ export class SpriteFactory {
 
   generateBrainTexture() {
     const g = this.scene.make.graphics({ add: false });
-    g.fillStyle(0xff9ff3, 1);
-    // Two lobes
-    g.fillCircle(20, 20, 16);
-    g.fillCircle(40, 20, 16);
-    // Base
-    g.fillRoundedRect(8, 16, 44, 24, 8);
+    const brainColor = 0xff9ff3;
+    const brainDark = 0xff6bd5;
+    const brainLight = 0xffb3f0;
+    const brainCore = 0xffffff;
+    
+    // Outer glow (for pickup effect)
+    g.fillStyle(brainLight, 0.3);
+    g.fillCircle(30, 24, 24);
+    
+    // Base shape
+    g.fillStyle(brainDark, 1);
+    g.fillRoundedRect(6, 12, 48, 28, 10);
+    
+    // Two lobes with gradient effect
+    g.fillStyle(brainColor, 1);
+    g.fillCircle(18, 20, 14);
+    g.fillCircle(42, 20, 14);
+    
+    // Overlap area
+    g.fillRoundedRect(18, 12, 24, 16, 8);
+    
+    // Highlights on lobes
+    g.fillStyle(brainLight, 0.8);
+    g.fillCircle(18, 18, 6);
+    g.fillCircle(42, 18, 6);
+    
+    // Core highlight
+    g.fillStyle(brainCore, 0.6);
+    g.fillCircle(30, 22, 4);
+    
+    // Texture details (wrinkles)
+    g.lineStyle(2, brainDark, 0.4);
+    g.beginPath();
+    g.moveTo(12, 20);
+    g.lineTo(20, 24);
+    g.lineTo(16, 28);
+    g.strokePath();
+    
+    g.beginPath();
+    g.moveTo(48, 20);
+    g.lineTo(40, 24);
+    g.lineTo(44, 28);
+    g.strokePath();
+    
     g.generateTexture('brain', 60, 48);
     g.destroy();
   }
@@ -355,61 +393,62 @@ export class SpriteFactory {
     }
 
     if (key === 'snowpea') {
-      // Icy blue-tinted head, frosty appearance with icicle details
+      // Icy blue-tinted head, frosty appearance with icicle details (shortened by half)
       return [
-        "................",  // pad top (2 rows)
+        "................",  // pad top (13 rows)
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
         "................",
         "................",  // 18 -> 18 (already correct width)
-        ".....hhhhhhhh.....",  // 16 -> 18
+        ".....hhhhhhhh.....",  // 16 -> 18 (head)
         "....hhhhhhhhhh....",  // 16 -> 18
         "...hhheeeehhhh....",  // 16 -> 18
         "...hhhhwwwwhhhh...",  // 16 -> 18
         "...hhhwwwwhhhh....",  // 17 -> 18
         "....hhhwwhhhh.....",  // 17 -> 18
-        "......ssssss......",  // 16 -> 18
-        "......ssssss......",  // 16 -> 18
-        "......ssssss......",  // 16 -> 18
-        "......ssssss......",  // 16 -> 18
-        ".......ssssss.....",  // 16 -> 18
-        ".......ssssss.....",  // 16 -> 18
-        ".....ssssssss.....",  // 17 -> 18
-        "....pppppppppp....",  // 17 -> 18
-        "...pppppppppppp...",  // 17 -> 18
-        "..pppppppppppppp..",  // 17 -> 18
-        "..pppppppppppppp..",  // 17 -> 18
-        "..pppppppppppppp..",  // 17 -> 18
-        "....pppppppppp....",  // 17 -> 18
-        "................",
+        "......ssssss......",  // 16 -> 18 (short stem)
+        ".....pppppppp.....",  // 16 -> 18 (small pot)
+        "....pppppppppp....",  // 16 -> 18
+        "................",  // pad bottom (3 rows)
         "................",
         "................",
       ];
     }
 
-    // peashooter default - classic shooter with mouth
+    // peashooter default - classic shooter with mouth (shortened by half)
     return [
-      "................",  // pad top (3 rows)
+      "................",  // pad top (12 rows)
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
       "................",
       "................",
       "................",  // 18 -> 18 (already correct width)
-      ".....hhhhhhhh.....",  // 16 -> 18
+      ".....hhhhhhhh.....",  // 16 -> 18 (head)
       "....hhhhhhhhhh....",  // 16 -> 18
       "...hhhe..ehhhh....",  // 16 -> 18
       "...hhhhhhhhhhh....",  // 16 -> 18
       "....hhdhhhdhh.....",  // 16 -> 18
       ".....hhh..hhh.....",  // 16 -> 18
-      "......ss..ss......",  // 16 -> 18
-      "......ss..ss......",  // 16 -> 18
-      "......ss..ss......",  // 16 -> 18
-      ".......ssss.......",  // 16 -> 18
-      ".......ssss.......",  // 16 -> 18
-      "......ss..ss......",  // 16 -> 18
-      "......ss..ss......",  // 16 -> 18
-      ".....pppppppp.....",  // 16 -> 18
+      "......ss..ss......",  // 16 -> 18 (short stem)
+      ".....pppppppp.....",  // 16 -> 18 (small pot)
       "....pppppppppp....",  // 16 -> 18
-      "...pppppppppppp...",  // 16 -> 18
-      "...pppppppppppp...",  // 16 -> 18
-      "...pppppppppppp...",  // 16 -> 18
-      ".....pppppppp.....",  // 16 -> 18
+      "................",  // pad bottom (3 rows)
       "................",
       "................",
     ];

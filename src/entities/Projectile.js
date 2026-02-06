@@ -12,6 +12,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, 'pea'); // Default texture, will change on fire
     // Note: When used with physics.add.group(), Phaser automatically adds
     // the sprite to the scene and creates the physics body
+    this.trailEmitter = null;
   }
 
   fire(x, y, textureKey, damage, velocityX, target, options = {}) {
@@ -47,6 +48,51 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     // Lifetime limit (kill after 5s)
     this.lifespan = 5000;
+
+    // Create particle trail
+    this.createTrail(textureKey, options);
+  }
+
+  createTrail(textureKey, options) {
+    // Clean up existing trail if any
+    if (this.trailEmitter) {
+      this.trailEmitter.destroy();
+      this.trailEmitter = null;
+    }
+
+    // Determine trail color based on projectile type
+    let trailColor = 0x4caf50; // Default green for peas
+    if (this.isZombieProjectile) {
+      trailColor = 0x8a3c5b; // Purple/pink for zombie projectiles
+    } else if (textureKey === 'snowpea_projectile') {
+      trailColor = 0x03a9f4; // Blue for snow peas
+    } else if (textureKey === 'sunbeam') {
+      trailColor = 0xffd54f; // Yellow for sunbeams
+    }
+
+    // Determine trail angle based on movement direction
+    // Trail goes backward (opposite of movement direction)
+    // velocityX < 0 means moving left, so trail goes right (around 0 degrees)
+    // velocityX > 0 means moving right, so trail goes left (around 180 degrees)
+    const isMovingLeft = this.velocityX < 0;
+    // Wider angle range for a visible trail (60 degree spread)
+    const baseAngle = isMovingLeft ? 0 : 180;
+    const angleMin = baseAngle - 30; // 30 degrees spread on each side
+    const angleMax = baseAngle + 30;
+
+    // Create trail emitter that follows the projectile
+    // Initialize at projectile position, then manually update each frame for accuracy
+    // Particles need to move MUCH slower than the projectile to form a visible trail
+    this.trailEmitter = this.scene.add.particles(this.x, this.y, 'particle_white', {
+      speed: { min: 5, max: 15 }, // Very slow speed so particles lag behind the fast-moving projectile
+      angle: { min: angleMin, max: angleMax }, // Wider angle for visible trail
+      scale: { start: 0.4, end: 0 },
+      alpha: { start: 0.8, end: 0 },
+      lifespan: 800, // Long lifespan so particles persist and form a visible trail
+      tint: trailColor,
+      frequency: 100, // Emit infrequently (every 100ms) to space particles out along the path
+      blendMode: Phaser.BlendModes.ADD, // Additive blending for glow effect
+    }).setDepth(15); // Behind the projectile but above background
   }
 
   onHit(target) {
@@ -88,6 +134,18 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
       this.body.stop();
       this.body.enable = false;
     }
+    
+    // Clean up trail emitter
+    if (this.trailEmitter) {
+      // Stop emitting new particles but let existing ones fade out
+      this.trailEmitter.stop();
+      this.scene.time.delayedCall(300, () => {
+        if (this.trailEmitter) {
+          this.trailEmitter.destroy();
+          this.trailEmitter = null;
+        }
+      });
+    }
   }
 
   update(time, delta) {
@@ -96,6 +154,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     // Enforce velocity every frame
     if (this.body) {
       this.body.setVelocityX(this.velocityX);
+    }
+
+    // Update trail emitter position to match projectile
+    if (this.trailEmitter && this.trailEmitter.active) {
+      this.trailEmitter.setPosition(this.x, this.y);
     }
 
     // Manual lifespan tracking

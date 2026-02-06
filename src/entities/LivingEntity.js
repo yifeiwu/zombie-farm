@@ -43,6 +43,22 @@ export class LivingEntity extends Phaser.Physics.Arcade.Sprite {
       if (!this.isDead) this.clearTint();
     });
 
+    // Damage particle burst with additive blend for glow
+    const damageColor = this.damageTint || 0xff0000;
+    const damageEmitter = this.scene.add.particles(this.x, this.y, 'particle_white', {
+      speed: { min: 20, max: 60 },
+      angle: { min: 0, max: 360 },
+      scale: { start: 0.8, end: 0 },
+      alpha: { start: 0.7, end: 0 },
+      lifespan: 200,
+      tint: damageColor,
+      frequency: -1,
+      quantity: 4,
+      blendMode: Phaser.BlendModes.ADD, // Additive blending for bright glow
+    }).setDepth(11);
+    damageEmitter.explode();
+    this.scene.time.delayedCall(300, () => damageEmitter.destroy());
+
     if (this.hp <= 0) {
       this.die();
     }

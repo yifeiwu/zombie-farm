@@ -47,11 +47,11 @@ export const ZOMBIE_TYPES = {
     cost: 100,
     hp: 75,
     speed: 20,
-    damage: 15,
-    attackSpeed: 1000,
+    damage: 30,
+    attackSpeed: 2000,
     color: 0x8a3c5b,
     description: 'Ranged zombie. Attacks from a distance.',
-    projectileSpeed: 120,
+    projectileSpeed: 300,
     piercing: false,
   },
   JUMPER: {
@@ -79,7 +79,7 @@ export const PLANT_TYPES = {
     attackSpeed: 1000, // ms between shots
     range: 9 * CELL_WIDTH,
     color: 0x4caf50,
-    projectileSpeed: 300,
+    projectileSpeed: 900,
     piercing: false,
   },
   SUNFLOWER: {
