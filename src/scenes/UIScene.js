@@ -29,23 +29,18 @@ export class UIScene extends Phaser.Scene {
     };
 
     // --- Top bar background ---
-    this.add.rectangle(GAME_WIDTH / 2, 0, GAME_WIDTH, 120, 0x1a1a2e, 0.85)
+    this.add.rectangle(GAME_WIDTH / 2, 0, GAME_WIDTH, 80, 0x1a1a2e, 0.85)
       .setOrigin(0.5, 0)
       .setDepth(this.uiDepths.topBg);
 
     // --- Brain counter ---
-    this.add.image(60, 40, 'brain_icon').setDepth(this.uiDepths.topFg).setScale(1.2);
-    this.add.text(100, 4, 'BRAINS', {
-      fontSize: '20px',
-      color: this.uiLabelColor,
-      fontFamily: this.uiFontFamily,
-    }).setDepth(this.uiDepths.topFg);
-    this.brainText = this.add.text(100, 24, `${STARTING_BRAINS}`, {
-      fontSize: '44px',
+    this.add.image(40, 40, 'brain_icon').setDepth(this.uiDepths.topFg).setScale(1.0);
+    this.brainText = this.add.text(70, 24, `${STARTING_BRAINS}`, {
+      fontSize: '36px',
       color: COLORS.BRAIN_COLOR,
       fontStyle: 'bold',
       fontFamily: this.uiFontFamily,
-    }).setDepth(this.uiDepths.topFg);
+    }).setOrigin(0, 0.5).setDepth(this.uiDepths.topFg);
 
     // (removed house HP bar)
 
@@ -56,29 +51,27 @@ export class UIScene extends Phaser.Scene {
       ? `Stage ${this.gameScene.stageConfig.id}: ${this.gameScene.stageConfig.name}`
       : '';
     this.add.text(GAME_WIDTH / 2, 24, stageName, {
-      fontSize: '26px',
+      fontSize: '24px',
       color: '#888888',
       fontFamily: this.uiFontFamily,
     }).setOrigin(0.5, 0).setDepth(this.uiDepths.topFg);
 
-    // --- Wave indicator ---
-    this.waveText = this.add.text(GAME_WIDTH - 40, 24, 'Wave 1', {
-      fontSize: '32px',
+    // --- Wave info (compact) ---
+    this.waveText = this.add.text(GAME_WIDTH - 20, 16, 'Wave 1', {
+      fontSize: '24px',
       color: '#ffaa00',
       fontStyle: 'bold',
       fontFamily: this.uiFontFamily,
     }).setOrigin(1, 0).setDepth(this.uiDepths.topFg);
 
-    // --- Time remaining ---
-    this.plantsText = this.add.text(GAME_WIDTH - 40, 64, '⏱ 0s left', {
-      fontSize: '24px',
+    this.plantsText = this.add.text(GAME_WIDTH - 20, 48, '⏱ 0s', {
+      fontSize: '18px',
       color: '#4caf50',
       fontFamily: this.uiFontFamily,
     }).setOrigin(1, 0).setDepth(this.uiDepths.topFg);
 
-    // --- Wave countdown timer ---
-    this.waveTimerText = this.add.text(GAME_WIDTH - 40, 94, '', {
-      fontSize: '22px',
+    this.waveTimerText = this.add.text(GAME_WIDTH - 120, 48, '', {
+      fontSize: '18px',
       color: this.uiLabelColor,
       fontFamily: this.uiFontFamily,
     }).setOrigin(1, 0).setDepth(this.uiDepths.topFg);
@@ -359,12 +352,12 @@ export class UIScene extends Phaser.Scene {
       const wavesTotal = this.gameScene.waveManager.maxWaves * total;
       const wavesElapsed = Math.max(0, (this.gameScene.waveManager.currentWave - 1) * total + elapsed);
       const remaining = Math.max(0, Math.ceil((wavesTotal - wavesElapsed) / 1000));
-      this.plantsText.setText(`⏱ ${remaining}s left`);
+      this.plantsText.setText(`⏱ ${remaining}s`);
       if (this.gameScene.waveManager.currentWave < this.gameScene.waveManager.maxWaves) {
         const nextWaveRemaining = Math.max(0, Math.ceil((total - elapsed) / 1000));
-        this.waveTimerText.setText(`Next wave: ${nextWaveRemaining}s`);
+        this.waveTimerText.setText(`Next: ${nextWaveRemaining}s`);
       } else {
-        this.waveTimerText.setText('Final wave!');
+        this.waveTimerText.setText('Final!');
       }
     }
   }

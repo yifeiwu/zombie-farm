@@ -58,8 +58,7 @@ export class GameScene extends Phaser.Scene {
     // --- Draw the lawn ---
     this.drawLawn();
 
-    // --- Spawn zone label (inside drop zone) ---
-    this.drawSpawnZoneLabel();
+    // (spawn zone labels removed — tap any row to spawn)
 
     // --- Wave Manager ---
     this.waveManager = new WaveManager(this, this.stageConfig);
@@ -193,20 +192,7 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5, 0).setDepth(11);
   }
 
-  drawSpawnZoneLabel() {
-    const spawnX = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH;
-    const zoneWidth = GAME_WIDTH - spawnX;
-    const labelX = spawnX + zoneWidth / 2;
-
-    for (let row = 0; row < GRID_ROWS; row++) {
-      const labelY = GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2;
-      this.add.text(labelX, labelY, '☠ SPAWN', {
-        fontSize: '36px',
-        color: '#ff6b6b',
-        fontStyle: 'bold',
-      }).setOrigin(0.5);
-    }
-  }
+  // (drawSpawnZoneLabel removed — tap any row to spawn)
 
   // ===========================================================================
   // Input Handling
@@ -218,14 +204,11 @@ export class GameScene extends Phaser.Scene {
     // Block clicks outside the grid bounds
     const gridBottom = GRID_OFFSET_Y + GRID_ROWS * CELL_HEIGHT;
     if (pointer.y < GRID_OFFSET_Y || pointer.y > gridBottom) return;
+    if (pointer.x < GRID_OFFSET_X || pointer.x > GRID_OFFSET_X + GRID_COLS * CELL_WIDTH) return;
 
     // Determine which row was clicked
     const row = Math.floor((pointer.y - GRID_OFFSET_Y) / CELL_HEIGHT);
     if (row < 0 || row >= GRID_ROWS) return;
-
-    // Only allow spawning on the right side of the grid
-    const spawnX = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH;
-    if (pointer.x < spawnX - CELL_WIDTH) return;
 
     this.spawnZombie(row);
   }
@@ -233,12 +216,12 @@ export class GameScene extends Phaser.Scene {
   handleHover(pointer) {
     if (this.isGameOver) return;
 
-    const spawnX = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH;
     const row = Math.floor((pointer.y - GRID_OFFSET_Y) / CELL_HEIGHT);
+    const gridRight = GRID_OFFSET_X + GRID_COLS * CELL_WIDTH;
 
-    if (row >= 0 && row < GRID_ROWS && pointer.x >= spawnX - CELL_WIDTH) {
+    if (row >= 0 && row < GRID_ROWS && pointer.x >= GRID_OFFSET_X && pointer.x <= gridRight) {
       const y = GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2;
-      this.rowHighlight.setPosition(spawnX + 36, y);
+      this.rowHighlight.setPosition(gridRight + 36, y);
       this.rowHighlight.setVisible(true);
     } else {
       this.rowHighlight.setVisible(false);
@@ -392,8 +375,8 @@ export class GameScene extends Phaser.Scene {
   // ===========================================================================
 
   showMessage(text, color = '#ffffff') {
-    const msg = this.add.text(GAME_WIDTH / 2, 30, text, {
-      fontSize: '18px',
+    const msg = this.add.text(GAME_WIDTH / 2, 100, text, {
+      fontSize: '24px',
       color: color,
       fontStyle: 'bold',
       stroke: '#000000',
@@ -535,7 +518,7 @@ export class GameScene extends Phaser.Scene {
 
   showBrainPopup() {
     const x = GAME_WIDTH - 80;
-    const y = 30;
+    const y = 100;
     const popup = this.add.text(x, y, `+${BRAIN_REGEN_AMOUNT} 🧠`, {
       fontSize: '16px',
       color: '#ff9ff3',
