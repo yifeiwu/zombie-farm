@@ -1,0 +1,4 @@
+wallnut_walk1,0,0,350,400
+wallnut_walk2,350,0,350,400
+wallnut_walk3,700,0,350,400
+wallnut_walk4,1050,0,350,400

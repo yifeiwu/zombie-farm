@@ -7,10 +7,15 @@ import { LivingEntity } from './LivingEntity.js';
 
 export class Plant extends LivingEntity {
   constructor(scene, x, y, config, row, col) {
-    super(scene, x, y, config.key, config.hp);
+    const texture = config.atlasTexture || config.key;
+    const frame = config.atlasFrame;
+    super(scene, x, y, texture, config.hp, frame);
 
     // Stats
     this.plantType = config.key;
+    this.usesAtlas = !!config.atlasTexture;
+    this.idleAnimKey = config.atlasTexture ? `${config.atlasTexture}_idle` : null;
+    this.attackAnimKey = config.atlasTexture ? `${config.atlasTexture}_attack` : null;
     this.damage = config.damage;
     this.attackSpeed = config.attackSpeed;
     this.range = config.range;
@@ -32,11 +37,20 @@ export class Plant extends LivingEntity {
 
     // Physics
     this.body.setImmovable(true);
-    this.body.setSize(64, 96);
-    this.body.setOffset(16, 24);
+    if (this.usesAtlas) {
+      this.displayScale = 0.32;
+      this.setScale(this.displayScale);
+      this.body.setSize(140, 160);
+      this.body.setOffset(105, 120);
+    } else {
+      this.displayScale = 1;
+      this.body.setSize(64, 96);
+      this.body.setOffset(16, 24);
+    }
 
-    // Gentle sway animation
-    scene.tweens.add({
+    // Gentle sway animation (skip for atlas plants; they use sprite anims)
+    if (!this.usesAtlas) {
+      scene.tweens.add({
       targets: this,
       angle: Phaser.Math.Between(-3, 3),
       duration: 1000 + Math.random() * 500,
@@ -44,6 +58,9 @@ export class Plant extends LivingEntity {
       repeat: -1,
       ease: 'Sine.easeInOut',
     });
+    } else {
+      this.play(this.idleAnimKey, true);
+    }
   }
 
   die() {
@@ -69,12 +86,20 @@ export class Plant extends LivingEntity {
   }
 
   playAttackTween() {
+    if (this.usesAtlas && this.attackAnimKey) {
+      this.play(this.attackAnimKey);
+      this.once('animationcomplete', () => {
+        this.play(this.idleAnimKey, true);
+      });
+      return;
+    }
+
     if (this.attackTween) {
       this.attackTween.stop();
       this.attackTween = null;
     }
 
-    // Quick backswing for a shot
+    // Quick backswing for a shot (procedural plants only)
     this.attackTween = this.scene.tweens.add({
       targets: this,
       angle: -6,

@@ -1,0 +1,8 @@
+shield_walk1,0,0,350,400
+shield_walk2,350,0,350,400
+shield_walk3,700,0,350,400
+shield_walk4,1050,0,350,400
+shield_attack1,0,400,350,400
+shield_attack2,350,400,350,400
+shield_attack3,700,400,350,400
+shield_attack4,1050,400,350,400

@@ -1,0 +1,8 @@
+snowpea_walk1,0,0,350,400
+snowpea_walk2,350,0,350,400
+snowpea_walk3,700,0,350,400
+snowpea_walk4,1050,0,350,400
+snowpea_attack1,0,400,350,400
+snowpea_attack2,350,400,350,400
+snowpea_attack3,700,400,350,400
+snowpea_attack4,1050,400,350,400

@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import {
   GAME_WIDTH, GAME_HEIGHT,
   GRID_OFFSET_X, GRID_OFFSET_Y, GRID_ROWS, GRID_COLS, CELL_WIDTH, CELL_HEIGHT,
-  ZOMBIE_TYPES, STARTING_BRAINS, COLORS, WAVE_CONFIG, EVENTS,
+  ZOMBIE_TYPES, COLORS, WAVE_CONFIG, EVENTS,
 } from '../config/constants.js';
 
 export class UIScene extends Phaser.Scene {
@@ -34,8 +34,10 @@ export class UIScene extends Phaser.Scene {
       .setDepth(this.uiDepths.topBg);
 
     // --- Brain counter ---
-    this.add.image(40, 40, 'brain_icon').setDepth(this.uiDepths.topFg).setScale(1.0);
-    this.brainText = this.add.text(70, 24, `${STARTING_BRAINS}`, {
+    const brainIconScale = 0.18; // 50% larger than before
+    const brainIcon = this.add.image(40, 40, 'misc', 'brain').setDepth(this.uiDepths.topFg).setScale(brainIconScale);
+    const brainIconW = 350 * brainIconScale;
+    this.brainText = this.add.text(40 + brainIconW / 2 + 8, 40, `${this.gameScene.brains} brains`, {
       fontSize: '36px',
       color: COLORS.BRAIN_COLOR,
       fontStyle: 'bold',
@@ -99,7 +101,7 @@ export class UIScene extends Phaser.Scene {
 
     // --- Listen to game events (store bound references for cleanup) ---
     this._onBrainsChanged = (brains) => {
-      this.brainText.setText(`${brains}`);
+      this.brainText.setText(`${brains} brains`);
       this.tweens.add({
         targets: this.brainText,
         scaleX: 1.1,
@@ -187,8 +189,10 @@ export class UIScene extends Phaser.Scene {
         .setInteractive({ useHandCursor: true })
         .setDepth(this.uiDepths.panelFg);
 
-      // Zombie icon
-      this.add.image(x - 60, y - 12, type.key).setScale(0.6).setDepth(this.uiDepths.panelIcon);
+      // Zombie icon (use atlas texture+frame when available)
+      const iconTex = type.atlasTexture || type.key;
+      const iconFrame = type.atlasFrame;
+      this.add.image(x - 60, y - 12, iconTex, iconFrame).setScale(0.6).setFlipX(true).setDepth(this.uiDepths.panelIcon);
 
       // Name
       this.add.text(x + 16, y - 32, type.name, {
@@ -198,8 +202,13 @@ export class UIScene extends Phaser.Scene {
         fontFamily: this.uiFontFamily,
       }).setOrigin(0, 0).setDepth(this.uiDepths.panelIcon);
 
-      // Cost
-      const costText = this.add.text(x + 16, y + 4, `🧠 ${type.cost}`, {
+      // Cost: brain icon + number (brain 50% bigger, vertically centered with text)
+      const costY = y + 4;
+      const costLineHeight = 22;
+      const brainScale = (20 / 380) * 1.5; // 50% bigger
+      const brainImg = this.add.image(x + 16, costY + costLineHeight / 2, 'misc', 'brain')
+        .setScale(brainScale).setOrigin(0, 0.5).setDepth(this.uiDepths.panelIcon);
+      const costText = this.add.text(x + 16 + 350 * brainScale + 6, costY, `${type.cost}`, {
         fontSize: '22px',
         color: COLORS.BRAIN_COLOR,
         fontFamily: this.uiFontFamily,
@@ -234,7 +243,7 @@ export class UIScene extends Phaser.Scene {
       });
 
       this.buttonBgs.push(bg);
-      this.zombieButtons.push({ bg, type, costText });
+      this.zombieButtons.push({ bg, type, costText, brainImg });
     });
 
     this.selectedIndex = 0;
@@ -255,13 +264,21 @@ export class UIScene extends Phaser.Scene {
       .setStrokeStyle(2, 0x444466)
       .setDepth(this.uiDepths.panelBg);
 
-    this.infoTitle = this.add.text(boxX + 20, boxY + 12, '', {
+    this.infoName = this.add.text(boxX + 20, boxY + 12, '', {
       fontSize: '28px',
       color: '#ffffff',
       fontStyle: 'bold',
       fontFamily: this.uiFontFamily,
-      wordWrap: { width: textWrapWidth, useAdvancedWrap: true },
-    }).setDepth(this.uiDepths.panelFg);
+    }).setOrigin(0, 0).setDepth(this.uiDepths.panelFg);
+
+    this.infoBrain = this.add.image(0, 0, 'misc', 'brain').setDepth(this.uiDepths.panelFg);
+
+    this.infoCost = this.add.text(0, 0, '', {
+      fontSize: '28px',
+      color: COLORS.BRAIN_COLOR,
+      fontStyle: 'bold',
+      fontFamily: this.uiFontFamily,
+    }).setOrigin(0, 0).setDepth(this.uiDepths.panelFg);
 
     this.infoStats = this.add.text(boxX + 20, boxY + 56, '', {
       fontSize: '22px',
@@ -283,7 +300,16 @@ export class UIScene extends Phaser.Scene {
   updateInfoPanel(type) {
     if (!type) return;
     const brains = this.gameScene.brains;
-    this.infoTitle.setText(`${type.name}  🧠 ${type.cost}`);
+    this.infoName.setText(type.name);
+    const nameEnd = this.infoName.x + this.infoName.width;
+    const infoLineHeight = 28;
+    const infoBrainScale = (infoLineHeight / 380) * 1.5; // 50% bigger
+    this.infoBrain.setScale(infoBrainScale).setOrigin(0, 0.5);
+    this.infoBrain.setPosition(nameEnd + 8, this.infoName.y + infoLineHeight / 2);
+    const infoBrainW = 350 * infoBrainScale;
+    this.infoCost.setText(` ${type.cost}`).setPosition(nameEnd + 8 + infoBrainW + 6, this.infoName.y);
+    if (brains < type.cost) this.infoBrain.setTint(0xff6b6b);
+    else this.infoBrain.clearTint();
     this.infoStats.setText(`HP ${type.hp}  DMG ${type.damage}  SPD ${type.speed}`);
     const desc = type.description || '';
     const deficit = Math.max(0, type.cost - brains);
@@ -321,11 +347,12 @@ export class UIScene extends Phaser.Scene {
 
   updateButtonStates() {
     const brains = this.gameScene.brains;
-    this.zombieButtons.forEach(({ bg, type, costText }, i) => {
+    this.zombieButtons.forEach(({ bg, type, costText, brainImg }, i) => {
       if (brains < type.cost) {
         bg.setAlpha(0.5);
         bg.setStrokeStyle(4, 0x555555);
         costText.setColor('#ff6b6b');
+        if (brainImg) brainImg.setTint(0xff6b6b);
       } else {
         bg.setAlpha(1);
         if (i === this.selectedIndex) {
@@ -334,6 +361,7 @@ export class UIScene extends Phaser.Scene {
           bg.setStrokeStyle(4, 0x444466);
         }
         costText.setColor(COLORS.BRAIN_COLOR);
+        if (brainImg) brainImg.clearTint();
       }
     });
   }

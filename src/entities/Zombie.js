@@ -7,10 +7,16 @@ import { LivingEntity } from './LivingEntity.js';
 
 export class Zombie extends LivingEntity {
   constructor(scene, x, y, config) {
-    super(scene, x, y, config.key, config.hp);
+    const texture = config.atlasTexture || config.key;
+    const frame = config.atlasFrame;
+    super(scene, x, y, texture, config.hp, frame);
 
     // Stats from config
     this.zombieType = config.key;
+    this.usesAtlas = !!config.atlasTexture;
+    this.walkAnimKey = config.atlasTexture ? `${config.atlasTexture}_walk` : null;
+    this.attackAnimKey = config.atlasTexture ? `${config.atlasTexture}_attack` : null;
+
     this.speed = config.speed;
     this.damage = config.damage;
     this.attackSpeed = config.attackSpeed;
@@ -34,19 +40,33 @@ export class Zombie extends LivingEntity {
     this.slowTimer = 0;
     this.currentSpeed = this.speed;
 
-    // Physics body setup - zombies move LEFT (toward the plants' house)
-    this.body.setSize(64, 96);
-    this.body.setOffset(16, 24);
+    // Face left (zombies move left toward the house)
+    this.setFlipX(true);
 
-    // Subtle shuffle animation (visual only)
-    this.shuffleTween = scene.tweens.add({
-      targets: this,
-      angle: Phaser.Math.Between(-2, 2),
-      duration: 900 + Math.random() * 400,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut',
-    });
+    // Physics body setup - zombies move LEFT (toward the plants' house)
+    if (this.usesAtlas) {
+      // Atlas frames are 350x400; scale to ~match procedural size (96x180)
+      this.setScale(0.45);
+      this.body.setSize(140, 160);
+      this.body.setOffset(105, 120);
+    } else {
+      this.body.setSize(64, 96);
+      this.body.setOffset(16, 24);
+    }
+
+    // Subtle shuffle animation (visual only) — skip for atlas zombies (they have sprite anims)
+    if (!this.usesAtlas) {
+      this.shuffleTween = scene.tweens.add({
+        targets: this,
+        angle: Phaser.Math.Between(-2, 2),
+        duration: 900 + Math.random() * 400,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+    } else {
+      this.play(this.walkAnimKey, true);
+    }
 
     // Start moving left (after body is fully set up)
     this.startMoving();
@@ -75,6 +95,9 @@ export class Zombie extends LivingEntity {
   stopAttacking() {
     this.isAttacking = false;
     this.attackTarget = null;
+    if (this.usesAtlas) {
+      this.play(this.walkAnimKey, true);
+    }
     this.startMoving();
   }
 
@@ -308,6 +331,10 @@ export class Zombie extends LivingEntity {
   }
 
   playAttackTween() {
+    if (this.usesAtlas) {
+      this.play(this.attackAnimKey, true);
+    }
+
     if (this.attackTween) {
       this.attackTween.stop();
       this.attackTween = null;

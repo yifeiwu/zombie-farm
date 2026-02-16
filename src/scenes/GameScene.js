@@ -31,7 +31,7 @@ export class GameScene extends Phaser.Scene {
     this.stageConfig = STAGES[this.stageIndex] || STAGES[0];
 
     // --- State ---
-    this.brains = STARTING_BRAINS;
+    this.brains = this.stageConfig.startingBrains ?? STARTING_BRAINS;
     this.selectedZombieType = ZOMBIE_TYPES.BASIC;
     this.zombiesReached = 0;
     this.isGameOver = false;
@@ -166,10 +166,10 @@ export class GameScene extends Phaser.Scene {
       0.6
     ).setStrokeStyle(2, 0x3e2723);
 
-    const houseEmojiY = housePanelTop + housePanelHeight * 0.35;
-    this.houseEmoji = this.add.text(houseX, houseEmojiY, '🏠', {
-      fontSize: '120px',
-    }).setOrigin(0.5);
+    const houseSpriteY = housePanelTop + housePanelHeight * 0.35;
+    const houseFrame = `house${this.stageConfig.id}`;
+    this.houseSprite = this.add.image(houseX, houseSpriteY, 'misc', houseFrame).setOrigin(0.5);
+    this.houseSprite.setScale(0.5); // misc house frames are 350x380; scale to fit panel
 
     const destroyTextY = housePanelTop + housePanelHeight * 0.55;
     this.add.text(houseX, destroyTextY, 'DESTROY', {
@@ -445,10 +445,12 @@ export class GameScene extends Phaser.Scene {
         0.08
       ).setStrokeStyle(2, 0xffffff, 0.5).setDepth(4);
 
-      const ghost = this.add.image(x, y, config.key)
+      const tex = config.atlasTexture || config.key;
+      const frame = config.atlasFrame;
+      const ghost = this.add.image(x, y, tex, frame)
         .setAlpha(0.35)
-        .setScale(0.9)
         .setDepth(5);
+      ghost.setScale((config.atlasTexture ? 0.32 : 1) * 0.9);
 
       this.plantSpawnPreview.push(highlight, ghost);
     });
@@ -535,7 +537,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   spawnBrainPickup(x, y, amount) {
-    const brain = this.add.image(x, y, 'brain').setInteractive({ useHandCursor: true }).setDepth(50);
+    const brain = this.add.image(x, y, 'misc', 'brain').setInteractive({ useHandCursor: true }).setDepth(50);
+    brain.setScale(0.17); // misc brain is 350x380; scale to ~60px for pickup
 
     // Glow ring effect
     const glowRing = this.add.circle(x, y, 30, 0xff9ff3, 0.2).setDepth(49);
@@ -572,11 +575,12 @@ export class GameScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
     });
     
-    // Scale pulse animation
+    // Scale pulse animation (subtle ~12% pulse from base scale)
+    const baseScale = 0.17;
     this.tweens.add({
       targets: brain,
-      scaleX: 1.1,
-      scaleY: 1.1,
+      scaleX: baseScale * 1.12,
+      scaleY: baseScale * 1.12,
       duration: 800,
       yoyo: true,
       repeat: -1,
@@ -659,7 +663,10 @@ export class GameScene extends Phaser.Scene {
 
     // Check if house is destroyed
     if (this.houseHp <= 0) {
-      this.houseEmoji.setText('💀');
+      this.houseSprite.setTint(0x666666).setAlpha(0.6);
+      this.add.text(this.houseSprite.x, this.houseSprite.y, '💀', {
+        fontSize: '80px',
+      }).setOrigin(0.5).setDepth(this.houseSprite.depth + 1);
       this.victory();
     }
   }

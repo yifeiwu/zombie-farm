@@ -1,0 +1,8 @@
+jumper_walk1,0,0,350,370
+jumper_walk2,350,0,350,370
+jumper_walk3,700,0,350,370
+jumper_walk4,1050,0,350,370
+jumper_attack1,0,370,350,370
+jumper_attack2,350,370,350,370
+jumper_attack3,700,370,350,370
+jumper_attack4,1050,370,350,370

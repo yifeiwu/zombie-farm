@@ -14,19 +14,24 @@ export const ZOMBIE_TYPES = {
     description: 'Basic zombie. Slow but steady.',
     projectileSpeed: 0,
     piercing: false,
+    // Tile-based atlas (replaces procedural texture)
+    atlasTexture: 'zombie_normal',
+    atlasFrame: 'normal_walk1',
   },
   FAST: {
     key: 'fast',
     name: 'Runner',
     cost: 50,
     hp: 20,
-    speed: 100,
+    speed: 120,
     damage: 15,
     attackSpeed: 600,
     color: 0xc43c3c,
     description: 'Fast zombie. Fragile but quick.',
     projectileSpeed: 0,
     piercing: false,
+    atlasTexture: 'zombie_fast',
+    atlasFrame: 'fast_walk1',
   },
   TANK: {
     key: 'tank',
@@ -40,19 +45,23 @@ export const ZOMBIE_TYPES = {
     description: 'Tanky zombie. Absorbs punishment.',
     projectileSpeed: 0,
     piercing: false,
+    atlasTexture: 'zombie_shield',
+    atlasFrame: 'shield_walk1',
   },
   SPITTER: {
     key: 'spitter',
     name: 'Spitter',
     cost: 100,
     hp: 75,
-    speed: 20,
+    speed: 30,
     damage: 30,
     attackSpeed: 2000,
     color: 0x8a3c5b,
     description: 'Ranged zombie. Attacks from a distance.',
     projectileSpeed: 300,
     piercing: false,
+    atlasTexture: 'zombie_spitter',
+    atlasFrame: 'spit_walk1',
   },
   JUMPER: {
     key: 'jumper',
@@ -66,6 +75,8 @@ export const ZOMBIE_TYPES = {
     description: 'Leaps to the nearest plant. Bypasses the front line.',
     projectileSpeed: 0,
     piercing: false,
+    atlasTexture: 'zombie_jumper',
+    atlasFrame: 'jumper_walk1',
   },
 };
 
@@ -81,6 +92,8 @@ export const PLANT_TYPES = {
     color: 0x4caf50,
     projectileSpeed: 900,
     piercing: false,
+    atlasTexture: 'plant_peashooter',
+    atlasFrame: 'peashooter_walk1',
   },
   SUNFLOWER: {
     key: 'sunflower',
@@ -92,6 +105,8 @@ export const PLANT_TYPES = {
     color: 0xffc107,
     piercing: true,
     projectileSpeed: 5000,
+    atlasTexture: 'plant_sunflower',
+    atlasFrame: 'sunflower_walk1',
   },
   SUPER_SUNFLOWER: {
     key: 'super_sunflower',
@@ -103,6 +118,8 @@ export const PLANT_TYPES = {
     color: 0xffb07a,
     piercing: true,
     projectileSpeed: 5200,
+    atlasTexture: 'plant_supersunflower',
+    atlasFrame: 'supersunflower_walk1',
   },
   WALLNUT: {
     key: 'wallnut',
@@ -114,6 +131,8 @@ export const PLANT_TYPES = {
     color: 0x795548,
     projectileSpeed: 0,
     piercing: false,
+    atlasTexture: 'plant_wallnut',
+    atlasFrame: 'wallnut_walk1',
   },
   SNOWPEA: {
     key: 'snowpea',
@@ -126,6 +145,8 @@ export const PLANT_TYPES = {
     slowFactor: 0.2,
     projectileSpeed: 50,
     piercing: false,
+    atlasTexture: 'plant_snowpea',
+    atlasFrame: 'snowpea_walk1',
   },
 };
 

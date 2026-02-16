@@ -4,8 +4,8 @@
 import Phaser from 'phaser';
 
 export class LivingEntity extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, textureKey, hp) {
-    super(scene, x, y, textureKey);
+  constructor(scene, x, y, textureKey, hp, frameKey) {
+    super(scene, x, y, textureKey, frameKey);
     scene.add.existing(this);
     scene.physics.add.existing(this);
     // Physics body is now enabled for Phaser.Physics.Arcade.Sprite

@@ -1,0 +1,13 @@
+{
+  "frames": {
+    "jumper_walk1": { "frame": { "x": 0, "y": 0, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_walk2": { "frame": { "x": 350, "y": 0, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_walk3": { "frame": { "x": 700, "y": 0, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_walk4": { "frame": { "x": 1050, "y": 0, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_attack1": { "frame": { "x": 0, "y": 370, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_attack2": { "frame": { "x": 350, "y": 370, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_attack3": { "frame": { "x": 700, "y": 370, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } },
+    "jumper_attack4": { "frame": { "x": 1050, "y": 370, "w": 350, "h": 370 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 350, "h": 370 }, "sourceSize": { "w": 350, "h": 370 } }
+  },
+  "meta": { "app": "zombie-farm", "image": "jumper.png", "format": "RGBA8888", "size": { "w": 1400, "h": 740 } }
+}

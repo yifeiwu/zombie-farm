@@ -230,12 +230,13 @@ export class WaveManager {
     const plant = new Plant(this.scene, x, y, config, row, col);
     this.grid[row][col] = plant;
 
-    // Pop-in animation
+    // Pop-in animation (use plant's displayScale so atlas plants stay correctly sized)
     plant.setScale(0);
+    const targetScale = plant.displayScale ?? 1;
     this.scene.tweens.add({
       targets: plant,
-      scaleX: 1,
-      scaleY: 1,
+      scaleX: targetScale,
+      scaleY: targetScale,
       duration: 300,
       ease: 'Back.easeOut',
     });

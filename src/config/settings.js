@@ -17,7 +17,7 @@ export const BRAIN_REGEN_AMOUNT = 40;
 export const PLANT_KILL_BOUNTY = { min: 200, max: 500 };
 export const HOUSE_MAX_HP = 1000;        // house the plants are defending
 export const SIGNAL_FLARE = {
-  threshold: 9,            // spawns in same row to trigger
+  threshold: 20,            // spawns in same row to trigger
   plan: ['PEASHOOTER', 'WALLNUT', 'WALLNUT', 'SUPER_SUNFLOWER'],
   backColumns: [0, 1, 2, 3],
 };

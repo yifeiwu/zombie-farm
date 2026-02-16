@@ -26,15 +26,37 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     expandParent: true,
   },
+  render: {
+    // Crisp rendering on high-DPI mobile screens; avoids sub-pixel blur
+    roundPixels: true,
+  },
   input: {
-    activePointers: 2,
+    activePointers: 5,
     touch: {
       capture: true,
+    },
+    mouse: {
+      preventDefaultWheel: true,
     },
   },
 };
 
 const game = new Phaser.Game(config);
+
+// On mobile: lock to landscape when entering fullscreen (requires fullscreen on most browsers)
+if (!game.device.os.desktop && screen.orientation?.lock) {
+  game.scale.on('enterfullscreen', () => {
+    screen.orientation.lock('landscape').catch(() => {});
+  });
+}
+
+// Reflow scale on orientation change (e.g. rotate phone landscape↔portrait)
+window.addEventListener('orientationchange', () => {
+  game.scale.refresh();
+});
+
+// Prevent long-press context menu on mobile (improves tap-to-play UX)
+document.addEventListener('contextmenu', (e) => e.preventDefault());
 
 // Suspend audio when the tab is hidden, resume when visible
 import { zzfxX } from './utils/zzfx.js';
